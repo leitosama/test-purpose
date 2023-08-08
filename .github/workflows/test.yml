@@ -17,8 +17,8 @@ jobs:
 
       - name: Get tag message body
         run: |
-          TAG_BODY="$(git tag -l --format='%(contents:subject)' ${{ github.ref_name }})"
-          echo "${TAG_BODY}" >> $GITHUB_OUTPUT        
+          git tag -l --format='%(contents:subject)' ${{ github.ref_name }}
+          git tag -l --format='%(contents:subject)' ${{ github.ref_name }} >> $GITHUB_OUTPUT        
         id: get_tag_message
 
       - name: Create release
