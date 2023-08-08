@@ -1,0 +1,26 @@
+name: Release and Publish
+run-name: ${{ github.actor }} triggered release and publication
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  release:
+    name: Create release and publish
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v3
+
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: ${{ github.ref_name }}
+          draft: false
+          body: |
+            Test
