@@ -20,7 +20,10 @@ jobs:
       - name: Get tag message body
         run: |
           git tag -l --format='%(contents:body)' ${{ github.ref_name }}
-          echo "$(git tag -l --format='%(contents:body)' ${{ github.ref_name }})" >> $GITHUB_OUTPUT        
+          EOF=${{ github.sha }}
+          echo "msg<<$EOF" >> $GITHUB_OUTPUT
+          echo "$(git tag -l --format='%(contents:body)' ${{ github.ref_name }})" >> $GITHUB_OUTPUT
+          echo "$EOF" >> $GITHUB_OUTPUT      
         id: get_tag_message
 
       - name: Create release
@@ -33,4 +36,4 @@ jobs:
           release_name: ${{ github.ref_name }}
           draft: false
           body: |
-            ${{join(steps.get_tag_message.outputs.*, '\r')}}
+            ${{join(steps.get_tag_message.outputs.msg, '\r')}}
