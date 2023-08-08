@@ -31,4 +31,4 @@ jobs:
           release_name: ${{ github.ref_name }}
           draft: false
           body: |
-            ${{join(steps.get_tag_message.outputs.*, '\n')}}
+            ${{join(steps.get_tag_message.outputs.*, '\r')}}
