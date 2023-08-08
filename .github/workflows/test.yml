@@ -12,8 +12,13 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
+      - name: Logging
+        run: |
+          echo "${{toJSON(github.event)}}"
+          
       - name: Clone repository
         uses: actions/checkout@v3
+
 
       # - name: Get tag message body
       #   run: |
