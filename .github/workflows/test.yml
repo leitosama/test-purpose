@@ -14,6 +14,8 @@ jobs:
     steps:
       - name: Clone repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
 
       - name: Get tag message body
         run: |
@@ -23,6 +25,10 @@ jobs:
           echo "$(git tag -l --format='%(contents:body)' ${{ github.ref_name }})" >> $GITHUB_OUTPUT
           echo "$EOF" >> $GITHUB_OUTPUT      
         id: get_tag_message
+
+      - name: Download release build
+        run: wget https://github.com/Security-Experts-Community/vscode-xp/releases/download/v3.7.1/vscode-xp-3.7.1.vsix
+        working-directory: /tmp/
 
       - name: Create release
         id: create_release
@@ -35,3 +41,13 @@ jobs:
           draft: false
           body: |
             ${{join(steps.get_tag_message.outputs.msg, '\r')}}
+
+      - name: Upload release asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: /tmp/vscode-xp-3.7.1.vsix
+          asset_name: vscode-xp-3.7.1.vsix
+          asset_content_type: application/zip
